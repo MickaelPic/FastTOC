@@ -1,0 +1,8 @@
+﻿1 - Open a file you want to generate the Table of Content for
+2 - Copy and paste the following where you want your Table of Content to appear in the document:
+<!-- TOC -->
+<!-- /TOC -->
+3 - Mark all the entries you want in the Table of Content with '#'. (The number of '#' marks the indentation. Ex: ## -> 1.1.)
+4 - Click on 'Tools / Update TOC'
+5 - The file is directly updated
+6 - Verify that the result is as expected
