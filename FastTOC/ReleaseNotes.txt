@@ -1,1 +1,9 @@
-﻿V1.0: Initial release
+﻿What's new in V1.1
+- Now with less hassle. You can generate a TOC without adding the TOC tags first. Just start you document, mark the lines you want in the TOC and fire it up.
+- Improved editor friendliness. We are only updating lines that have actually changed. So you can see easily in the editor the lines that have actually changed.
+- Improved memory management by reducing the amount of data kept while processing.
+- Improved processing speed by removing some unnecessary variable usage.
+
+What's new in V1.0
+- Initial Release.
+- Know issue: TOC is not generated when the TOC tags are no found.

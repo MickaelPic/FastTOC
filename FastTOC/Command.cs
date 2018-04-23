@@ -120,6 +120,11 @@ namespace FastTOC
         string editorContent = textDocument.CreateEditPoint(textDocument.StartPoint).GetText(textDocument.EndPoint);
         string[] lines = editorContent.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
 
+        if (lines.Length == 0)
+        {
+          return;
+        }
+
         // Search for the new TOC
         List<TOC_Entry> entries = new List<TOC_Entry>();
         List<TOC_Entry> currentDepth = new List<TOC_Entry>();
@@ -130,9 +135,11 @@ namespace FastTOC
         {
           if (line.StartsWith("#") == false)
           {
+            // Not a marker, don't care
             continue;
           }
 
+          // Length of marker
           index = line.IndexOf(" ");
 
           if (index == 1)
@@ -147,9 +154,10 @@ namespace FastTOC
           }
           else if (index > currentDepth.Count)
           {
-            // Jumped to a sub level, fill missing with 0
+            // Jumped to a sub level, check for potentially missing levels
             depth = String.Format("{0}", currentDepth[currentDepth.Count - 1].Depth);
 
+            // Fill missing with 0
             for (int i = currentDepth.Count; i < index - 1; i++)
             {
               depth += "0.";
@@ -171,10 +179,14 @@ namespace FastTOC
             currentDepth.Add(current);
           }
 
-          // Replace the line with its updated version
-          if (textDocument.ReplacePattern(line + Environment.NewLine, current.NewLine + Environment.NewLine) == false)
+          // Checks if the line has changed
+          if (String.Compare(line, current.NewLine) != 0)
           {
-            textDocument.ReplacePattern(line, current.NewLine);
+            // Replace the line with its updated version
+            if (textDocument.ReplacePattern(line + Environment.NewLine, current.NewLine + Environment.NewLine) == false)
+            {
+              textDocument.ReplacePattern(line, current.NewLine);
+            }
           }
         }
 
@@ -188,6 +200,7 @@ namespace FastTOC
 
         // Search for the old TOC and replace it
         bool inOldTOC = false;
+        bool foundOldTOC = false;
         foreach(string line in lines)
         {
           if (string.IsNullOrEmpty(line) == true)
@@ -196,17 +209,28 @@ namespace FastTOC
           }
           if (line.IndexOf("<!-- TOC -->") >= 0)
           {
+            // Beginning of Old TOC
             inOldTOC = true;
+            foundOldTOC = true;
           }
           if (line.IndexOf("<!-- /TOC -->") >= 0)
           {
+            // End of Old TOC
             inOldTOC = false;
             textDocument.ReplacePattern(line + Environment.NewLine, newTOC);
           }
           if (inOldTOC == true)
           {
+            // Remove content of old TOC
             textDocument.ReplacePattern(line + Environment.NewLine, "");
           }
+        }
+        if (foundOldTOC == false)
+        {
+          // If no found old TOC, just place the new one at the top
+          string line = lines[0];
+          newTOC = newTOC + line + Environment.NewLine;
+          textDocument.ReplacePattern(line + Environment.NewLine, newTOC);
         }
       }
       catch(Exception ex)
@@ -221,13 +245,17 @@ namespace FastTOC
       }
     }
 
+    /// <summary>
+    /// Generates the content of the new TOC recursively
+    /// </summary>
+    /// <param name="entries">List of entries to generate</param>
+    /// <returns>A string containing the TOC generated for "entries"</returns>
     private string GenerateNewTOC(List<TOC_Entry> entries)
     {
       string newTOC = "";
       foreach (TOC_Entry entry in entries)
       {
-        newTOC += entry.TOC_Line;
-        newTOC += Environment.NewLine;
+        newTOC += entry.TOC_Line + Environment.NewLine;
         newTOC += GenerateNewTOC(entry.Subs);
       }
       return newTOC;

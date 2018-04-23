@@ -70,6 +70,7 @@
   <ItemGroup>
     <VSCTCompile Include="CommandPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
+      <SubType>Designer</SubType>
     </VSCTCompile>
     <Content Include="Copyright.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -88,8 +89,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Resources\Command.png" />
-    <Content Include="Resources\CommandPackage.ico" />
+    <Content Include="Resources\icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="stylesheet.css" />
   </ItemGroup>
   <ItemGroup>

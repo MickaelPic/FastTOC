@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace FastTOC
@@ -11,7 +10,6 @@ namespace FastTOC
 
     private string _line = "";
 
-    private string _link = "";
     public string Depth { get; set; }
 
     public string NewLine { get; set; }
@@ -26,8 +24,7 @@ namespace FastTOC
       this._line = line;
       this._title = ExtractTitle(line, line.IndexOf(" "));
       Subs = new List<TOC_Entry>();
-
-      GenerateLink();
+      
       Generate_ToC_Line();
       GenerateNewLine();
     }
@@ -54,24 +51,6 @@ namespace FastTOC
       return line;
     }
 
-    private void GenerateLink()
-    {
-      string text = String.Format("{0} {1}", Depth, this._title.ToLower());
-      text = text.Replace(" ", "-");
-      StringBuilder sb = new StringBuilder();
-      foreach(char c in text)
-      {
-        if ((c >= '0' && c <= '9') ||
-          (c >= 'a' && c <= 'z') ||
-          c == '-')
-        {
-          sb.Append(c);
-        }
-      }
-
-      this._link = "#" + sb.ToString();
-    }
-
     private void Generate_ToC_Line()
     {
       string spaces = "";
@@ -80,7 +59,22 @@ namespace FastTOC
       {
         spaces += "    ";
       }
-      TOC_Line = String.Format("{0}- [{1} {2}]({3})", spaces, Depth, this._title, this._link);
+
+      string text = String.Format("{0} {1}", Depth, this._title.ToLower());
+      text = text.Replace(" ", "-");
+      string link = "#";
+      foreach (char c in text)
+      {
+        if ((c >= '0' && c <= '9') ||
+          (c >= 'a' && c <= 'z') ||
+          c == '-')
+        {
+          link += c;
+        }
+      }
+
+      // Build the TOC Title + link
+      TOC_Line = String.Format("{0}- [{1} {2}]({3})", spaces, Depth, this._title, link);
     }
 
     private void GenerateNewLine()
@@ -91,6 +85,8 @@ namespace FastTOC
       {
         marks += "#";
       }
+
+      // Build the new line with the updated marker, depth and the title
       this.NewLine = String.Format("{0} {1} {2}", marks, Depth, this._title);
     }
   }
