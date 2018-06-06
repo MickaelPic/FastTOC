@@ -239,7 +239,7 @@ namespace FastTOC
           }
         }
       }
-      catch(Exception ex)
+      catch (Exception ex)
       {
         VsShellUtilities.ShowMessageBox(
             this.ServiceProvider,

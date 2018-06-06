@@ -1,6 +1,7 @@
 ﻿# Road map
 
-- [ ] Nothing yet...
+- [ ]
+Nothing yet...
 - [x] Add ReadMe & Changelog
 - [x] Generate Table of Content
 - [x] Only update changed lines
@@ -26,8 +27,8 @@ on the official Visual Studio extension gallery.
 
 **2018-04-23**
 
-- [x] Now with less hassle. You can generate a TOC without adding the TOC tags first. Just start you document, mark the lines you want in the TOC and fire it up.
-- [x] Improved editor friendliness. We are only updating lines that have actually changed. So you can see easily in the editor the lines that have actually changed.
+- [x] Now with less hassle. You can generate a TOC without adding the TOC tags first.Just start you document, mark the lines you want in the TOC and fire it up.
+- [x] Improved editor friendliness.We are only updating lines that have actually changed.So you can see easily in the editor the lines that have actually changed.
 - [x] Improved memory management by reducing the amount of data kept while processing.
 - [x] Improved processing speed by removing some unnecessary variable usage.
 
