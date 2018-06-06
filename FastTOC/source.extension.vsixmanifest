@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="FastTOC.048c5f86-3cab-48cf-b6a2-3cd5a5fd307f" Version="1.1" Language="en-US" Publisher="Cup of Tea" />
+    <Identity Id="FastTOC.048c5f86-3cab-48cf-b6a2-3cd5a5fd307f" Version="1.2" Language="en-US" Publisher="Cup of Tea" />
     <DisplayName>FastTOC</DisplayName>
     <Description xml:space="preserve">A Fast and Simple Table of Contents (TOC) generator</Description>
     <MoreInfo>https://github.com/MickaelPic/FastTOC</MoreInfo>

@@ -131,6 +131,7 @@ namespace FastTOC
         int index;
         string depth;
         TOC_Entry current;
+        bool hasChanged = false;
         foreach (string line in lines)
         {
           if (line.StartsWith("#") == false)
@@ -186,51 +187,56 @@ namespace FastTOC
             if (textDocument.ReplacePattern(line + Environment.NewLine, current.NewLine + Environment.NewLine) == false)
             {
               textDocument.ReplacePattern(line, current.NewLine);
+
+              hasChanged = true;
             }
           }
         }
 
-        // Generate the new TOC
-        string newTOC = "";
-        newTOC += "<!-- TOC -->";
-        newTOC += Environment.NewLine;
-        newTOC += GenerateNewTOC(entries);
-        newTOC += "<!-- /TOC -->";
-        newTOC += Environment.NewLine;
-
-        // Search for the old TOC and replace it
-        bool inOldTOC = false;
-        bool foundOldTOC = false;
-        foreach(string line in lines)
+        if (hasChanged)
         {
-          if (string.IsNullOrEmpty(line) == true)
+          // Generate the new TOC
+          string newTOC = "";
+          newTOC += "<!-- TOC -->";
+          newTOC += Environment.NewLine;
+          newTOC += GenerateNewTOC(entries);
+          newTOC += "<!-- /TOC -->";
+          newTOC += Environment.NewLine;
+
+          // Search for the old TOC and replace it
+          bool inOldTOC = false;
+          bool foundOldTOC = false;
+          foreach (string line in lines)
           {
-            continue;
+            if (string.IsNullOrEmpty(line) == true)
+            {
+              continue;
+            }
+            if (line.IndexOf("<!-- TOC -->") >= 0)
+            {
+              // Beginning of Old TOC
+              inOldTOC = true;
+              foundOldTOC = true;
+            }
+            if (line.IndexOf("<!-- /TOC -->") >= 0)
+            {
+              // End of Old TOC
+              inOldTOC = false;
+              textDocument.ReplacePattern(line + Environment.NewLine, newTOC);
+            }
+            if (inOldTOC == true)
+            {
+              // Remove content of old TOC
+              textDocument.ReplacePattern(line + Environment.NewLine, "");
+            }
           }
-          if (line.IndexOf("<!-- TOC -->") >= 0)
+          if (foundOldTOC == false)
           {
-            // Beginning of Old TOC
-            inOldTOC = true;
-            foundOldTOC = true;
-          }
-          if (line.IndexOf("<!-- /TOC -->") >= 0)
-          {
-            // End of Old TOC
-            inOldTOC = false;
+            // If no found old TOC, just place the new one at the top
+            string line = lines[0];
+            newTOC = newTOC + line + Environment.NewLine;
             textDocument.ReplacePattern(line + Environment.NewLine, newTOC);
           }
-          if (inOldTOC == true)
-          {
-            // Remove content of old TOC
-            textDocument.ReplacePattern(line + Environment.NewLine, "");
-          }
-        }
-        if (foundOldTOC == false)
-        {
-          // If no found old TOC, just place the new one at the top
-          string line = lines[0];
-          newTOC = newTOC + line + Environment.NewLine;
-          textDocument.ReplacePattern(line + Environment.NewLine, newTOC);
         }
       }
       catch(Exception ex)
